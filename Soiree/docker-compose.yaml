@@ -1,0 +1,84 @@
+services:
+  dns:
+    build:
+      context: ./Bind9/
+      tags:
+        - "dns_vins:1.0.0"
+        - "dns_vins:latest"
+    container_name: dns_vins
+    image: dns_vins:1.0.0
+    restart: unless-stopped
+    volumes:
+      - ./Bind9/config/named.conf.local:/etc/bind/named.conf.local
+      - ./Bind9/config/db.saveursetvins.lan:/etc/bind/db.saveursetvins.lan
+      - ./Bind9/config/db.192.168.0:/etc/bind/db.192.168.0
+    ports:
+      - "5353:53"
+    networks:
+      - reseau-vins
+
+  mariadb:
+    build:
+      context: ./mariadb/
+      tags:
+        - "mariadb_vins:1.0.0"
+        - "mariadb_vins:latest"
+    container_name: mariadb_vins
+    image: mariadb_vins:1.0.0
+    restart: unless-stopped
+    environment:
+      # MARIADB_DATABASE: shop
+      # MARIADB_USER: shop
+      MARIADB_PASSWORD: Pouett€
+      MARIADB_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mariadb/DB:/var/lib/mysql:rw
+    networks:
+      - reseau-vins
+    depends_on:
+      - dns
+
+  php_fpm:
+    build:
+      context: ./php/
+      tags:
+        - "php-fpm_vins:1.0.0"
+        - "php-fpm_vins:latest"
+    container_name: php-fpm_vins
+    image: php-fpm_vins:1.0.0
+    restart: unless-stopped
+    volumes:
+      - ./nginx/site:/var/www/html:rw
+    networks:
+      - reseau-vins
+    depends_on:
+      - dns
+
+  web:
+    build:
+      context: ./nginx/
+      tags:
+        - "nginx_vins:1.0.0"
+        - "nginx_vins:latest"
+    container_name: nginx_vins
+    image: nginx_vins:1.0.0
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/site:/usr/share/nginx/html:rw
+      - ./nginx/config:/etc/nginx/conf.d/:ro
+      - ./nginx/logs:/var/log/nginx
+    networks:
+      - reseau-vins
+    depends_on:
+      - dns
+      - php_fpm
+      - mariadb
+
+networks:
+  reseau-vins:
+    driver: bridge

@@ -1,0 +1,11 @@
+zone "saveursetvins.lan" IN {
+    type master;
+    file "/etc/bind/db.saveursetvins.lan";
+    allow-update { none; };
+};
+
+zone "0.168.192.in-addr.arpa" IN {
+    type master;
+    file "/etc/bind/db.192.168.0";
+    allow-update { none; };
+};

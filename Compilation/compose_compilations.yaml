@@ -1,0 +1,23 @@
+services:
+  compilation_rh:
+    image: compile_red_hat:1.0.0
+    volumes:
+      - compilateur_red_hat:/home/compile
+      - ./projet_commun:/home/compile/projet
+
+  compilation_ubuntu:
+    image: compile_ubuntu:1.0.0
+    volumes:
+      - compilateur_ubuntu:/home/compile
+      - ./projet_commun:/home/compile/projet
+
+  compilation_fedora:
+    image: compile_fedora:1.0.0
+    volumes:
+      - compilateur_fedora:/home/compile
+      - ./projet_commun:/home/compile/projet
+
+volumes:
+  compilateur_red_hat:
+  compilateur_ubuntu:
+  compilateur_fedora:
