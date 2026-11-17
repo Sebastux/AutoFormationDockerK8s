@@ -1,13 +1,8 @@
-FROM ubuntu:24.04
+FROM smallstep/step-ca:latest
 LABEL authors="Sebastux"
 LABEL version="1.0"
-LABEL commentaire="Conteneur de compilation de script python avec ou sans pyside 6."
+LABEL commentaire="Conteneur contenant la CA du site."
 
-ARG USER_ID=1001
-ARG GROUP_ID=1001
-ARG USER_NAME="compile"
-ARG USER_GROUP="${USER_NAME}"
-ENV HOME="/home/${USER_NAME}"
 
 
 RUN apt-get update && apt-get upgrade -y; apt-get install -y build-essential python3 python3-dev python3-pip libgl1 \
@@ -24,3 +19,6 @@ WORKDIR ${HOME}
 
 RUN python3 -m venv venv && ./venv/bin/pip install --upgrade --no-cache-dir pip setuptools wheel && ./venv/bin/pip install --no-cache-dir nuitka PySide6
 RUN mkdir "${HOME}/projet" && echo "source ${HOME}/venv/bin/activate" >> ${HOME}/.bashrc && echo "alias ll='ls -lh'" >> ${HOME}/.bashrc
+
+
+docker pull smallstep/step-ca

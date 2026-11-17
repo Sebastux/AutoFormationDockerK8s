@@ -17,6 +17,23 @@ services:
     networks:
       - reseau-vins
 
+#  step-ca:
+#    image: smallstep/step-ca:latest
+#    container_name: step-ca_vins
+#    restart: unless-stopped
+#    ports:
+#      - "9000:9000"
+#    environment:
+#      - DOCKER_STEPCA_INIT_NAME=SaveursEtVinsCA
+#      - DOCKER_STEPCA_INIT_DNS_NAMES=localhost,ca.saveursetvins.lan,step-ca
+#      - DOCKER_STEPCA_INIT_PROVISIONER_NAME=admin
+#    volumes:
+#      - step_data:/home/step
+#    networks:
+#      - reseau-vins
+#    depends_on:
+#      - dns
+
   mariadb:
     build:
       context: ./mariadb/
@@ -82,3 +99,7 @@ services:
 networks:
   reseau-vins:
     driver: bridge
+
+volumes:
+  step_data:
+
