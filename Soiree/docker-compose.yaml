@@ -44,18 +44,40 @@ services:
     image: mariadb_vins:1.0.0
     restart: unless-stopped
     environment:
-      # MARIADB_DATABASE: shop
-      # MARIADB_USER: shop
-      MARIADB_PASSWORD: Pouett€
-      MARIADB_ROOT_PASSWORD: root
-    ports:
-      - "3306:3306"
+      MARIADB_ROOT_PASSWORD: Pou3tt€
+      MARIADB_DATABASE: saveursvins
+      MARIADB_USER: questionnaire
+      MARIADB_PASSWORD: Pou3tt€Pou3tt€
     volumes:
       - ./mariadb/DB:/var/lib/mysql:rw
+      - ./mariadb/init:/docker-entrypoint-initdb.d:ro
     networks:
       - reseau-vins
     depends_on:
       - dns
+
+  phpmyadmin:
+    build:
+      context: ./phpmyadmin/
+      tags:
+        - "phpmyadmin_vins:1.0.0"
+        - "phpmyadmin_vins:latest"
+    container_name: phpmyadmin_vins
+    image: phpmyadmin_vins:1.0.0
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mariadb
+      PMA_ARBITRARY: 1
+      TZ: Europe/Paris
+      MYSQL_ROOT_PASSWORD: Pou3tt€
+      MARIADB_ROOT_HOST: localhost
+    ports:
+      - "8080:80"
+    networks:
+      - reseau-vins
+    depends_on:
+      - dns
+      - mariadb
 
   php_fpm:
     build:
@@ -100,6 +122,6 @@ networks:
   reseau-vins:
     driver: bridge
 
-volumes:
-  step_data:
+#volumes:
+#  step_data:
 
