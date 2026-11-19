@@ -1,7 +1,5 @@
 FROM smallstep/step-ca:latest
-LABEL authors="Sebastux"
-LABEL version="1.0"
-LABEL commentaire="Conteneur contenant la CA du site."
+LABEL authors="Sebastux" version="1.0" commentaire="Conteneur contenant la CA du site."
 
 
 
